@@ -67,6 +67,12 @@ jobs:
           }
           echo "✓ GPG key verified in image"
 
+      # Pre-create the output dir so Docker's bind-mount setup doesn't mkdir it
+      # as root, which would stop the non-root build user writing the image
+      # (same as build-in-container.sh and build-debian-arm64.yml)
+      - name: Create images output directory
+        run: mkdir -p images
+
       # Run the VM build inside the container
       # this test only checks the default build but others should work
       # added user group for docker key to allow kvm access, must match Dockerfile USER
